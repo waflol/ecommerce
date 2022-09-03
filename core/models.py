@@ -1,8 +1,7 @@
 from audioop import reverse
-from distutils.command.upload import upload
-from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User
+from django_countries.fields import CountryField
 # Create your models here.
 
 class Customer(models.Model):
@@ -61,7 +60,7 @@ class Order(models.Model):
     datetime_ofpayment = models.DateTimeField(auto_now_add=True)
     order_delivered = models.BooleanField(default=False)
     order_received = models.BooleanField(default=False)
-    
+
     razorpay_order_id = models.CharField(max_length=500,null=True,blank=True)
     razorpay_payment_id = models.CharField(max_length=500,null=True,blank=True)
     razorpay_signature = models.CharField(max_length=500,null=True,blank=True)
@@ -82,4 +81,12 @@ class Order(models.Model):
     def get_total_count(self):
         order = Order.objects.get(pk = self.pk)
         return order.items.count()
-    
+
+class CheckoutAddress(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    street_address = models.CharField(max_length=100)
+    apartment_address = models.CharField(max_length=100)
+    country = CountryField(multiple = False)
+    zip_code = models.CharField(max_length=100)
+    def __str__(self) -> str:
+        return self.user.username

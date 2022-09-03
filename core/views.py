@@ -7,6 +7,7 @@ from django.views import View
 from django.contrib import messages
 from core.models import *
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 # Create your views here.
@@ -143,3 +144,35 @@ def remove_item(request,pk):
         messages.info(request,"You Do not have any Order!")
         return redirect("orderlist")
     
+
+def checkout_page(request):
+    if CheckoutAddress.objects.filter(user=request.user).exists():
+        context = {'payment_allow':"allow"}
+        return render(request,'checkout.html',context)
+    if request.method == 'POST':
+        form = CheckoutForm(request.POST)
+        try:
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                apartment_address = form.cleaned_data.get('apartment_address')
+                country = form.cleaned_data.get('country')
+                zip = form.cleaned_data.get('zip')
+                
+                checkout_address = CheckoutAddress(
+                    user = request.user,
+                    street_address=street_address,
+                    apartment_address = apartment_address,
+                    country = country,
+                    zip = zip
+                )
+                checkout_address.save()
+                print("It should render the summary page")
+                context = {'payment_allow':"allow"}
+                return render(request,'checkout.html',context)    
+        except ObjectDoesNotExist:
+            messages.info(request,"Failed checkout!")
+            return redirect('checkout')
+    else:
+        form = CheckoutForm()
+        context = {'form',form}
+        return render(request,'checkout.html',context)

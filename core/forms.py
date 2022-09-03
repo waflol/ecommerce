@@ -1,6 +1,7 @@
+from tokenize import blank_re
 from django import forms
 from core.models import *
-
+from django_countries.widgets import CountrySelectWidget
 class ProductForms(forms.ModelForm):
     class Meta:
         model = Product
@@ -13,3 +14,37 @@ class ProductForms(forms.ModelForm):
             'product_available_count': forms.NumberInput(attrs={'class':'form-control'}),
             'img': forms.FileInput(attrs={'class':'form-control'})
         }
+        
+class CheckoutForm(forms.Form):
+    street_address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'1234 Main St'
+            }
+        )
+    )
+    
+    apartment_address = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'Apartment or Suite'
+            }
+        )
+    )
+    
+    country = CountryField(blank_label='(select country)').formfield(
+        widget=CountrySelectWidget({
+            'class':'custom-select d-block w-100'
+        })
+    )
+    
+    zip = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+            }
+        )
+    )
