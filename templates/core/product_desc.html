@@ -67,7 +67,8 @@
 							<span class="color blue"></span>
 						</h5>
 						<div class="action">
-							<button class="add-to-cart btn btn-info" type="button">add to cart</button>
+                            
+                            <a class="add-to-cart btn btn-info" href="{% url 'add_to_cart' product.pk %}">add to cart</a>
 							<button class="like btn btn-danger" type="button"><span class="fa fa-heart"></span></button>
 						</div>
 					</div>

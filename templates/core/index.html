@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load cart_template_tag %}
 <html lang="en">
 
 <head>
@@ -61,8 +62,19 @@
 
         <nav id="navbar" class="navbar">
           <ul>
+            {% if user.is_authenticated %}
             <li><a class="nav-link scrollto active" href="/">Home</a></li>
-            <li><a class="nav-link scrollto" href="{% url 'add_product' %}">Add Product</a></li>
+            <li>
+              
+              <a class="nav-link scrollto active " href="{% url 'orderlist' %}">
+                <button type="button" class="btn btn-primary position-relative">
+                  Cart
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{request.user | cart_item_count}}
+                  </span>
+                </button>
+              </a>
+            </li>
             <li><a class="nav-link scrollto" href="#services">Services</a></li>
             <li><a class="nav-link scrollto " href="#portfolio">Portfolio</a></li>
             <li><a class="nav-link scrollto" href="#team">Team</a></li>
@@ -83,13 +95,14 @@
                 <li><a href="#">Drop Down 4</a></li>
               </ul>
             </li>
-
-            {% if user.is_authenticated %}
+            {% if user.is_superuser %}
+            <li><a class="nav-link scrollto" href="{% url 'add_product' %}">Add Product</a></li>
+            {% endif %}
             <li><a class="nav-link scrollto" href="#about">Welcome {{user.username}}</a></li>
-            <li><a class="getstarted scrollto" href="{% url 'accounts:user_logout' %}">Logout</a></li>
+            <li><a class="getstarted scrollto" href="{% url 'user_logout' %}">Logout</a></li>
             {% else %}
-            <li><a class="nav-link scrollto" href="{% url 'accounts:user_login' %}">Login</a></li>
-            <li><a class="getstarted scrollto" href="{% url 'accounts:user_register' %}">Register</a></li>
+            <li><a class="nav-link scrollto" href="{% url 'user_login' %}">Login</a></li>
+            <li><a class="getstarted scrollto" href="{% url 'user_register' %}">Register</a></li>
             {% endif %}
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
