@@ -11,51 +11,47 @@
     <link rel="stylesheet" href="{% static 'forms/css/style.css' %}">
     <!-- Other dependency File -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>Add Product</title>
 </head>
 
 <body>
+    <script>
+        {% if messages %} {% for message in messages %}
+        alert('{{ message }}');
+        {% endfor %} {% endif %}
+    </script>
     <div class="container-fluid px-1 py-5 mx-auto">
         <div class="row d-flex justify-content-center">
             <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                 <h1>Add Product</h1>
                 <div class="card">
                     <h5 class="text-center mb-4">Add Product</h5>
-                    <form class="form-card" onsubmit="event.preventDefault()">
+                    <form action="{% url  'add_product' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% for field in form.visible_fields  %}
+                        {% for field in form.visible_fields %}
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                            <div class="form-group col-sm-6 flex-column d-flex">
                                 <label class="form-control-label px-3">{{field.label_tag}}
                                     <span class="text-danger">*</span>
                                 </label>
-                                {{field}} 
+                                {{field}}
                             </div>
                         </div>
                         {% endfor %}
-                        
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex"> 
-                                <label class="form-control-label px-3">
-                                    Business email
-                                    <span class="text-danger">*</span>
-                                </label> 
-                                <input type="text" id="email" name="email" placeholder="" onblur="validate(3)"> 
-                            </div>
-                        </div>
 
                         <div class="row justify-content-end">
-                            <div class="form-group col-sm-6"> <button type="submit"
-                                    class="btn-block btn-primary">Add Product</button></div>
+                            <input type="submit" value="Add Product" class="btn-block btn-primary">
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Template JS File -->
 

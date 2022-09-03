@@ -13,6 +13,7 @@ def user_login(request):
         user = authenticate(username=username,password=password)
         if user is not None:
             login(request,user)
+            messages.info(request,'Hello, '+user.get_username()+'!' )
             return redirect('/')
         messages.info(request,'Login Failed, Please Try Again!')
     return render(request,'accounts/login.html')
@@ -27,10 +28,10 @@ def user_register(request):
         if password == re_password:
             if User.objects.filter(username = username).exists():
                 messages.info(request,'Username already existed!')
-                return redirect('user_register')
+                return render(request,'accounts/register.html')
             elif User.objects.filter(email = email).exists():
                 messages.info(request,'Email already existed!')
-                return redirect('user_register')
+                return render(request,'accounts/register.html')
             else:
                 user = User.objects.create_user(username=username,email=email,password=password)
                 user.save()
@@ -41,12 +42,14 @@ def user_register(request):
                 auth_user = authenticate(username = username,password=password)
                 if auth_user is not None:
                     login(request,auth_user)
+                    messages.info(request,'Hello, '+user.get_username()+'!' )
                     return redirect('/')
         else:
             messages.info(request,'Password and Confirm Password Missmatch!')
-            return redirect('user_register')
+            return render(request,'accounts/register.html')
     return render(request,'accounts/register.html')
 
 def user_logout(request):
     logout(request)
+    messages.info(request,'Logout successfully!')
     return redirect('/')
